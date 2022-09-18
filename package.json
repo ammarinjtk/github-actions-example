@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "nuxt --port $PORT",
+    "local-dev": "vercel dev -A vercel.dev.json"
+  },
+  "dependencies": {
+    "access-log": "^0.4.1"
+  },
+  "devDependencies": {
+    "nuxt-edge": "latest"
+  }
+}
