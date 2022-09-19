@@ -16,7 +16,7 @@ jobs:
       - name: Migrate Prisma
         env: 
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npx prisma migrate dev
+        run: npx prisma migrate deploy
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
