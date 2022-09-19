@@ -32,5 +32,8 @@
         "Access-Control-Allow-Headers": "Content-Type"
       }
     }
-  ]
+  ],
+  "github": {
+    "enabled": false
+  }
 }
