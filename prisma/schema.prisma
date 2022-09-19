@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid()) @db.Uuid
+  authId     String?
+  nickName   String
+  secret     String
+  counter    Counter? @relation(fields: [counterId], references: [id])
+  counterId  String?
+  updatedAt  DateTime @updatedAt
+  Coupon     Coupon[]
+  lastActive DateTime @default(now())
+  insertedAt DateTime @default(now())
+  startedAt DateTime @default(now())
+  startedAt2 DateTime @default(now())
+  startedAt3 DateTime @default(now())
+
+  @@index([counterId])
+  @@index([lastActive])
+  @@index([insertedAt])
+  @@index([updatedAt])
+}
+
+enum Privacy {
+  public
+  private
+}
+
+model Counter {
+  id         String   @id
+  privacy    Privacy  @default(public)
+  size       Int      @default(2)
+  drink      Drink?   @relation(fields: [drinkId], references: [id])
+  drinkId    Int?
+  users      User[]
+  secret     String
+  insertedAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime @updatedAt
+  numUsers   Int      @default(1)
+
+  @@index([numUsers, privacy])
+  @@index([drinkId, numUsers, privacy])
+  @@index([insertedAt])
+  @@index([updatedAt])
+}
+
+model Drink {
+  id          Int       @id @default(autoincrement())
+  description String
+  counters    Counter[]
+  merchantId  Int?
+  merchant    Merchant? @relation(fields: [merchantId], references: [id])
+  insertedAt  DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @updatedAt
+
+  @@index([insertedAt])
+  @@index([updatedAt])
+}
+
+enum CouponStatus {
+  valid
+  used
+  expired
+}
+
+model Coupon {
+  id         String       @id @default(uuid()) @db.Uuid
+  userId     String       @db.Uuid
+  user       User         @relation(fields: [userId], references: [id])
+  status     CouponStatus @default(valid)
+  usedAt     DateTime?    @db.Timestamp(6)
+  merchant   Merchant?    @relation(fields: [merchantId], references: [id])
+  merchantId Int?
+  insertedAt DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime     @updatedAt
+
+  @@index([insertedAt])
+  @@index([updatedAt])
+}
+
+model Merchant {
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String
+  drinks       Drink[]
+  insertedAt   DateTime       @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime       @updatedAt
+  Subscription Subscription[]
+  Coupon       Coupon[]
+
+  @@index([insertedAt])
+  @@index([updatedAt])
+}
+
+model Subscription {
+  id         Int      @id @default(autoincrement())
+  merchantId Int
+  merchant   Merchant @relation(fields: [merchantId], references: [id])
+  packageId  Int
+  package    Package  @relation(fields: [packageId], references: [id])
+  startAt    DateTime @db.Timestamp(6)
+  endAt      DateTime @db.Timestamp(6)
+
+  insertedAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime @updatedAt
+
+  @@index([insertedAt])
+  @@index([updatedAt])
+}
+
+model Package {
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String
+  Subscription Subscription[]
+
+  insertedAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime @updatedAt
+
+  @@index([insertedAt])
+  @@index([updatedAt])
+}

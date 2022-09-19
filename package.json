@@ -6,9 +6,11 @@
     "local-dev": "vercel dev -A vercel.dev.json"
   },
   "dependencies": {
+    "@prisma/client": "4.3.1",
     "access-log": "^0.4.1"
   },
   "devDependencies": {
-    "nuxt-edge": "latest"
+    "nuxt-edge": "latest",
+    "prisma": "^4.3.1"
   }
 }
